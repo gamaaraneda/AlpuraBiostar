@@ -1,0 +1,348 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+<div class="page-header header-filter " data-parallax="true" style="background-image: url(@Url.Content("~/Content/assets/img/Tipos-de-leche-de-vaca-Blog.jpg")); height:360px"></div>
+
+<div class="main main-raised">
+
+    <div class="container">
+
+        <div class="section text-center">
+
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto">
+                    <h2 class="title">Consuta de Asistencia</h2>
+                    <h5 class="description"></h5>
+                </div>
+
+            </div>
+
+            @*CONTROLES DE FECHAS*@
+            <div class="row mt-md-5">
+
+                <div class="col-md-3 ml-auto">
+                    <div class="form-group">
+                        <label class="label-control">Fecha Inicio</label>
+                        <input id="fechainicio" type="text" class="form-control datetimepicker" />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="label-control">Fecha Fin</label>
+                        <input id="fechafin" type="text" class="form-control datetimepicker" />
+                    </div>
+                </div>
+
+                <div class="col-md-3 mr-auto">
+                    <div class="form-group">
+                        <button id="filtrar" type="button" class="btn btn-primary">
+                            Consultar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            @*style="display:none;"*@
+            <div id="divCragnado">
+                <img id="cargando" src="~/Content/assets/img/load1.gif" style="display:none;" />
+            </div>
+
+            <div id="divResultados" style="display: none">
+
+                <div class="row">
+                    <div class="col-md-10 ml-auto  mr-auto mt-4">
+
+                        <h3 class="text-left title">Resultados ... </h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10 ml-auto mr-auto text-right">
+                        <button id="btnsync" type="button" class="btn btn-success">
+                            Sync
+                        </button>
+                    </div>
+                </div>
+
+
+                @*GRID DE RESULTADOS*@
+                <div class="row">
+                    <div class="col-md-10 ml-auto mr-auto mt-1 ">
+                        <table id="gridAsistencia" class="display"></table>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+    <script type="text/javascript">
+
+        var dataSet = [
+            ["234561", "2010/10/14", "System Architect", "Edinburgh", "SI", "NA", "NA", "2011/04/25"],
+            ["234562", "2010/10/14", "Accountant", "Tokyo", "NO", "ERROR", "NO EXIST DB", "2011/07/25"],
+            ["234563", "2010/10/14", "Junior Technical Author", "Edinburgh", "SI", "NA", "NA", "2009/01/12",],
+            ["234564", "2010/10/14", "Senior Javascript Developer", "Edinburgh", "NO", "ERROR", "NO EXIST DB", "2012/03/29"],
+            ["234565", "2010/10/14", "Accountant", "Tokyo", "NO", "ERROR", "NO EXIST DB", "2008/11/28"],
+            ["234566", "2010/10/14", "Integration Specialist", "New York", "SI", "NA", "NA", "2012/12/02"],
+            ["234567", "2010/10/14", "Sales Assistant", "New York", "SI", "NA", "NA", "2012/08/06"],
+            ["234568", "2010/10/14", "Integration Specialist", "SI", "SI", "NA", "NA", "2010/10/14"],
+        ];
+        var table;
+
+        $(function () {
+
+            var fechax = new Date();
+            fechax.setDate(fechax.getDate() - 1);
+
+             //** CONTROLES DE FECHAS **////
+            $('#fechainicio').datetimepicker({
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove'
+                },
+                format: 'DD/MM/YYYY HH:mm',
+                defaultDate: fechax,
+                maxDate: new Date()
+            });
+
+            $('#fechafin').datetimepicker({
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-chevron-up",
+                    down: "fa fa-chevron-down",
+                    previous: 'fa fa-chevron-left',
+                    next: 'fa fa-chevron-right',
+                    today: 'fa fa-screenshot',
+                    clear: 'fa fa-trash',
+                    close: 'fa fa-remove'
+                },
+                format: 'DD/MM/YYYY HH:mm',
+                defaultDate: new Date(),
+                maxDate: new Date()
+            });
+
+            //** METODOS DEL GRID **////
+            table = $('#gridAsistencia').DataTable({
+                destroy:true,
+                columns: [
+                    { title: "EmployeNumber" },
+                    { title: "Fecha" },
+                    { title: "Ubicacion" },
+                    { title: "Hostname" },
+                    { title: "RegSoa" },
+                    { title: "Status" },
+                    { title: "Descripcion" },
+                    { title: "Records" }
+                ]
+            });
+
+            $('#gridAsistencia tbody').on('click', 'tr', function () {
+               $(this).toggleClass('selected');
+            });
+
+            //** BOTON SYNC **////
+            $('#btnsync').click(function () {
+
+                var registrosNoSync = new Array();
+
+                var data = table.rows('.selected').data();
+
+                data.each(function (e) {
+
+                    var registro = new Object();
+                    registro.EmployeNumber = e["EmployeNumber"];
+                    registro.Fecha = e["Fecha" ];
+                    registro.Ubicacion = e["Ubicacion"];
+                    registro.Hostname = e["Hostname"];
+                    registro.RegSoa = e["RegSoa"];
+                    registro.Status = e["Status"];
+                    registro.Descripcion = e["Descripcion"];
+                    registro.Records = e["Records"];
+
+                   registrosNoSync.push(registro);
+                });
+
+                if (registrosNoSync.length > 0) {
+
+                    mostrarCaragando();
+
+                    $.ajax({
+                        url: '@Url.Action("SynRegistrosGrid", "Asistencia")',
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify({ lsAsistencias: registrosNoSync }),
+                        dataType: "json",
+                        success: function (result) {
+
+                            if (result.result == true) {
+
+                                
+                                mensaje('success', 'Registros Eliminados', 'Los registros se eliminaron correctamente, espere un momento se estan actualizando los registros');
+
+                                del = $('#fechainicio').val();
+                                al = $('#fechafin').val();
+                                ConsultarRegistros(del, al);
+                                ocultarCargando();
+                            }
+                            if (result.result == false) {
+                                ocultarCargando();
+                                mensaje('error', 'Registros No Eliminados', 'Los registros no fueron eliminados, reintente  y si persiste el problema consulte al administrador del sistema');
+                            }
+                        },
+                        complete: function () {
+                        },
+                    });
+                    ocultarCargando();
+                }
+                else {
+
+                    mensaje('error', 'Selecciona Regitros', 'Debes seleccionar al menos un registro para sincronizar');
+                }
+
+            });
+
+        });
+
+        //** BOTON FILTRAR **////
+        $('#filtrar').click(function (event) {
+
+            del = $('#fechainicio').val();
+            al = $('#fechafin').val();
+
+            var inicio = moment(al, "DD/MM/YYYY HH:mm");
+            var fin = moment(del,"DD/MM/YYYY HH:mm");
+            var diferencia = inicio.diff(fin, 'minutes')
+
+            if (diferencia <= 0) {
+
+                mensaje('error', 'Cambie Fechas', 'La fecha inicial debe ser menor a la Fecha Final');
+
+                }
+            else {
+                mostrarCaragando();
+                ConsultarRegistros(del, al);
+                ocultarCargando();
+
+            }
+
+
+        });
+
+
+
+        function ConsultarRegistros(fechaInio, fechaFin) {
+
+            $.ajax({
+                    url: '@Url.Action("RegistrosFiltroFechas", "Asistencia")',
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                 data: JSON.stringify({ FechaInicio: fechaInio, FechaFin: fechaFin }),
+                    dataType: "json",
+                    success: function (response) {
+
+                        table = $('#gridAsistencia').DataTable({
+                            destroy: true,
+                            data: response.result,
+                            processing: true,
+                            columns: [
+                                {
+                                    //field: "EmployeNumber",
+                                    title: "EmployeNumber",
+                                    data: 'EmployeNumber'
+                                },
+                                {
+                                    //field: "Fecha",
+                                    title: "Fecha",
+                                    data: 'Fecha'
+
+                                },
+                                {
+                                    //field: "Ubicacion",
+                                    title: "Ubicacion",
+                                    data: 'Ubicacion'
+                                },
+                                {
+                                    //field: "Hostname",
+                                    title: "Hostname",
+                                    data: 'Hostname'
+
+                                },
+                                {
+                                    //field: "RegSoa",
+                                    title: "RegSoa",
+                                    data: 'RegSoa'
+                                },
+                                {
+                                    //field: "Status",
+                                    title: "Status",
+                                    data: 'Status'
+                                },
+                                {
+                                    //field: "Descripcion",
+                                    title: "Descripcion",
+                                    data: 'Descripcion'
+                                },
+                                {
+                                    //field: "Records",
+                                    title: "Records",
+                                    data: 'Records'
+                                }
+                            ]
+                        });
+                    },
+                    complete: function () {
+                    },
+                });
+
+        }
+
+        function mensaje(tipo,titulo, desc) {
+
+            var notice = new PNotify({
+                title: titulo,
+                text: desc,
+                type: tipo,
+                styling: 'bootstrap3',
+                buttons: {
+                    closer: true,
+                    sticker: true
+                },
+                animate: {
+                    animate: true,
+                    in_class: 'bounceInDown',
+                    out_class: 'hinge'
+                }
+            });
+            notice.get().click(function () {
+                notice.remove();
+            });
+        }
+
+        function ocultarCargando() {
+            document.getElementById("cargando").style.display = 'none';
+            document.getElementById("divResultados").style.display = 'inline';
+        }
+
+        function mostrarCaragando() {
+            document.getElementById("cargando").style.display = 'inline';
+            document.getElementById("divResultados").style.display = 'none';
+        }
+
+    </script>

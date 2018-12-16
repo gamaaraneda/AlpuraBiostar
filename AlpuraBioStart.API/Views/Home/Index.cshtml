@@ -1,0 +1,229 @@
+﻿@{
+    ViewBag.Title = "Index";
+
+}
+
+<div class="page-header header-filter" data-parallax="true" style="background-image: url(@Url.Content("~/Content/assets/img/Tipos-de-leche-de-vaca-Blog.jpg"))">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1 class="title">BIENVENIDO</h1>
+
+                <h4>El control de acceso de los trabajadores es importante, nosotros te ayudamos a mejorar tu operación, generando
+                como beneficio aumento en la producctividad.
+                </h4>
+                <br>
+                @*<a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn btn-danger btn-raised btn-lg">
+                    <i class="fa fa-play"></i> Watch video
+                </a>*@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main main-raised">
+
+    <div class="container">
+
+        <div class="section text-center">
+            <div class="row">
+                <!--<div class="col-md-8 ml-auto mr-auto">
+                    <h2 class="title">Let&apos;s talk product</h2>
+                    <h5 class="description">This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious, otherwise he wouldn&apos;t scroll to get here. Add a button if you want the user to see more.</h5>
+                </div>-->
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 ml-auto mr-auto">
+            <div class="profile-tabs">
+                <ul class="nav nav-pills nav-pills-icons justify-content-center  nav-pills-info" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#cargas" role="tab" data-toggle="tab" id="tabcarga">
+                            <i class="material-icons">cloud_upload</i> Cargas
+                        </a>
+                    </li>
+                    @*<li class="nav-item">
+                        <a class="nav-link" href="#reportes" role="tab" data-toggle="tab" id="tabReportes">
+                            <i class="material-icons">insert_chart_outlined</i> Reportes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#Administradores" role="tab" data-toggle="tab" id="tabAdministradores">
+                            <i class="material-icons">chrome_reader_mode</i> Administrador
+                        </a>
+                    </li>*@
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="tab-content tab-space">
+
+        <div class="tab-pane active text-center gallery" id="cargas">
+            <div class="row">
+
+                <div class="col-md-3 ml-auto mr-auto">
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-danger">
+                                    <i class="material-icons">watch_later</i>
+                                </div>
+                                <h4 class="info-title">Carga Manual</h4>
+                                <p>Sincroniza los registros de asistensia con la nube</p>
+                            </div>
+                            <a href='@Url.Action("Index", "Asistencia")' class="btn btn-success">Cargar</a>
+
+                        </div>
+                    </div>
+
+                </div>
+                @*<div class="col-md-3 mr-auto">
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">check_circle</i>
+                                </div>
+                                <h4 class="info-title">NOM - 002</h4>
+                                <p>Plantilla de NOM-002 con datos de los Items del “TOP 5 Análisis Preventivo”, según el tamaño de la producción</p>
+                            </div>
+                            <a href="https://cloudmapps.azurewebsites.net/SitioCEP/Presentacion/CargaNom.aspx" class="btn btn-success">Cargar</a>
+                        </div>
+                    </div>
+
+                </div>*@
+
+            </div>
+        </div>
+
+        @*<div class="tab-pane text-center gallery" id="reportes">
+            <div class="row">
+                <div class="col-md-3 ml-auto">
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">bubble_chart</i>
+                                </div>
+                                <h4 class="info-title">An&aacute;lisis Estad&iacute;stico</h4>
+                                <p>Estadísticas de un PT, sus SUBs, NOM-002, TOP 5 Preventivo, Correctivo y Acciones de Ahorro</p>
+                            </div>
+                            <a href="http://gbreport.southcentralus.cloudapp.azure.com/ReportServer?%2fCEP_4%2fHerramientaCEP&rs:Command=Render" class="btn btn-success">Ver</a>
+                        </div>
+                    </div>
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">insert_invitation</i>
+                                </div>
+                                <h4 class="info-title">Productos por Per&iacute;odo</h4>
+                                <p>Comparativa entre Plantas del comportamiento de uno o varios Productos</p>
+                            </div>
+                            <a href="http://gbreport.southcentralus.cloudapp.azure.com/ReportServer/Pages/ReportViewer.aspx?%2fCEP_4%2ftablaperiodossemanasXprodcutp&rs:Command=Render" class="btn btn-success">Ver</a>
+                        </div>
+                    </div>
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">assignment_turned_in</i>
+                                </div>
+                                <h4 class="info-title">Cargas Realizadas</h4>
+                                <p>Detalle de qué plantas han cargado información en las últimas semanas</p>
+                            </div>
+                            <a href="http://gbreport.southcentralus.cloudapp.azure.com/ReportServer/Pages/ReportViewer.aspx?%2fCEP_4%2fCargasRealizadas_CEP&rs:Command=Render" class="btn btn-success">Ver</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-3 mr-auto">
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">monetization_on</i>
+                                </div>
+                                <h4 class="info-title">Balance PT</h4>
+                                <p>Histórico del Balance Semanal en Montos Económicos por Planta, Región o Bimbo S.A.</p>
+                            </div>
+                            <a href="http://gbreport.southcentralus.cloudapp.azure.com/ReportServer?%2fCEP_4%2fCEPR_2&rs:Command=Render" class="btn btn-success">Ver</a>
+                        </div>
+                    </div>
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">multiline_chart</i>
+                                </div>
+                                <h4 class="info-title">CEP Nacional</h4>
+                                <p>Resumen Nacional de Balance, Potencial de Ahorro y Riesgo de Bajo peso, incluyendo TOPs 5</p>
+                            </div>
+                            <a href="http://gbreport.southcentralus.cloudapp.azure.com/ReportServer/Pages/ReportViewer.aspx?%2fCEP_4%2fCEPNacional&rs:Command=Render" class="btn btn-success">Ver</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane text-center gallery" id="Administradores">
+            <div class="row">
+                <div class="col-md-3 ml-auto mr-auto">
+
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <div class="info">
+                                <div class="icon icon-info">
+                                    <i class="material-icons">view_list</i>
+                                </div>
+                                <h4 class="info-title">Productos y Especificaciones</h4>
+                                <p>Sección compatible con Internet Explorer, para administrar Productos, Especificaciones, y asociar PTs con SUBs</p>
+                            </div>
+                            <a href="http://gbreport.southcentralus.cloudapp.azure.com/sitiocep/desktopclient/" class="btn btn-success">Ver</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+
+</div>
+
+<!--MODAL Plantillas-->
+@*<div class="modal fade bd-example-modal-lg" id="ModalPlantillas" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="ModalLabel">Carga Semanal</h2>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="embed-responsive embed-responsive-4by3">
+                    <embed class="embed-responsive-item" src="@Url.Content("~/Content/Docs/Guia_cargas_semanales.pdf")">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger btn-round" type="button" data-dismiss="modal">
+                    <i class="material-icons">close</i> Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+</div>*@
+
