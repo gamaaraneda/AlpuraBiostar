@@ -15,7 +15,7 @@ namespace AlpuraBioStart.API.Controllers
     public class AsistenciaController : Controller
     {
         INegocioAsistencia _negocioAsistencia;
-
+         
         public AsistenciaController()
         {
             string conexionMariaDB = ConfigurationManager.ConnectionStrings["conexionMariaDB"].ConnectionString;
