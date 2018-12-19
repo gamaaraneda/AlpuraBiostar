@@ -38,6 +38,18 @@ namespace AlpuraBiostar.Datos.Asistencia
             return lstAsistencia;
         }
 
+        public void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle)
+        {
+            var dicParametros = new Dictionary<string, string>() {
+                { "@FechaRecibida", asistencia.Fecha },
+                { "@EmployeNumber", asistencia.EmployeNumber  },
+                { "@RegSoa", asistencia.RegSoa  },
+                { "@Estado", resultOracle.o_estatus  },
+                { "@Descripcion", resultOracle.o_descripcion  }
+            };
+            var dtAsistencia = _consultasMariaDB.ejecutarStore("Asistencia_editarRegistro", dicParametros);
+        }
+
 
         #region Privados
 

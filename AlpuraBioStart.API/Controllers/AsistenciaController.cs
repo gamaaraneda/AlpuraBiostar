@@ -19,7 +19,9 @@ namespace AlpuraBioStart.API.Controllers
         public AsistenciaController()
         {
             string conexionMariaDB = ConfigurationManager.ConnectionStrings["conexionMariaDB"].ConnectionString;
-            _negocioAsistencia = new NegocioAsistencia(conexionMariaDB);
+            string conexionWSAlpura = ConfigurationManager.ConnectionStrings["conexionWSAlpura"].ConnectionString;
+
+            _negocioAsistencia = new NegocioAsistencia(conexionMariaDB, conexionWSAlpura);
            
         }
 
@@ -45,7 +47,7 @@ namespace AlpuraBioStart.API.Controllers
         [HttpGet]
         public JsonResult RegistrosNoSync()
         {
-            var lstAsistenciaNoSync = _negocioAsistencia.obtenerRegistrosNoSync();
+            var lstAsistenciaNoSync = _negocioAsistencia.syncRegistros();
             return Json(new { productos = lstAsistenciaNoSync }, JsonRequestBehavior.AllowGet);
         }
 
@@ -66,11 +68,10 @@ namespace AlpuraBioStart.API.Controllers
         [HttpPost]
         public JsonResult SynRegistrosGrid(List<TypeAsistencia> lsAsistencias)
         {
-            //FechaInicio = new Validaciones().validarFecha(FechaInicio);
-            //FechaFin = new Validaciones().validarFecha(FechaFin);
 
-            //var lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
-            return Json(new { result = true }, JsonRequestBehavior.AllowGet);
+            var a =_negocioAsistencia.syncRegistroOracle(lsAsistencias);
+
+            return Json(new { result = a }, JsonRequestBehavior.AllowGet);
         }
 
 

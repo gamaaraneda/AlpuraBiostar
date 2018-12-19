@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.Datos", "Alpu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.Negocio", "AlpuraBiostar.Negocio\AlpuraBiostar.Negocio.csproj", "{2CF71A9F-053B-4320-8935-7043C824AAA7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.NegocioTests", "AlpuraBiostar.NegocioTests\AlpuraBiostar.NegocioTests.csproj", "{64063E54-90BA-4663-AFBE-B717794CBDFD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{2CF71A9F-053B-4320-8935-7043C824AAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CF71A9F-053B-4320-8935-7043C824AAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CF71A9F-053B-4320-8935-7043C824AAA7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

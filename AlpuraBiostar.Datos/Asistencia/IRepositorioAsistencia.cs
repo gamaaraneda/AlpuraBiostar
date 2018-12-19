@@ -12,5 +12,7 @@ namespace AlpuraBiostar.Datos.Asistencia
     {
         List<TypeAsistencia> obtenerRegistrosNoSync();
         List<TypeAsistencia> obtenerRegistrosPorRangoDeFechas(string fechaInicio,string fechaFin);
+
+        void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle);
     }
 }
