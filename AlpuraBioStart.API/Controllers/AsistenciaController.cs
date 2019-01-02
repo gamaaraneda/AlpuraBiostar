@@ -57,12 +57,12 @@ namespace AlpuraBioStart.API.Controllers
             FechaInicio = new Validaciones().validarFecha(FechaInicio);
             FechaFin = new Validaciones().validarFecha(FechaFin);
 
-            var aa = new List<TypeAsistencia>();
-            aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = "675", Fecha="15/12/2018", Ubicacion="mexico", Hostname="GSA", RegSoa="SI", Status="", Records="15/12/2018" });
-            aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = "676", Fecha="16/12/2018", Ubicacion="mexico", Hostname="GSA", RegSoa="SI", Status="", Records="16/12/2018" });
+            //var aa = new List<TypeAsistencia>();
+            //aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = "675", Fecha="15/12/2018", Ubicacion="mexico", Hostname="GSA", RegSoa="SI", Status="", Records="15/12/2018" });
+            //aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = "676", Fecha="16/12/2018", Ubicacion="mexico", Hostname="GSA", RegSoa="SI", Status="", Records="16/12/2018" });
 
-            //var lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
-            return Json(new { result = aa }, JsonRequestBehavior.AllowGet);
+            var lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
+            return Json(new { result = lstAsistencia }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

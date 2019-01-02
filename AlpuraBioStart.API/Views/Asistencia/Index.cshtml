@@ -2,9 +2,8 @@
     ViewBag.Title = "Index";
 }
 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
-
+<link href="@Url.Content("~/Content/DataTables/datatables.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Content/DataTables/datatables.min.js")"></script>
 
 <div class="page-header header-filter " data-parallax="true" style="background-image: url(@Url.Content("~/Content/assets/img/Tipos-de-leche-de-vaca-Blog.jpg")); height:360px"></div>
 
@@ -84,6 +83,7 @@
 
         </div>
     </div>
+
     <script type="text/javascript">
 
         var dataSet = [
@@ -103,7 +103,7 @@
             var fechax = new Date();
             fechax.setDate(fechax.getDate() - 1);
 
-             //** CONTROLES DE FECHAS **////
+              //** CONTROLES DE FECHAS **////
             $('#fechainicio').datetimepicker({
                 icons: {
                     time: "fa fa-clock-o",
@@ -117,8 +117,9 @@
                     close: 'fa fa-remove'
                 },
                 format: 'DD/MM/YYYY HH:mm',
+                //maxDate: new Date(),
                 defaultDate: fechax,
-                maxDate: new Date()
+
             });
 
             $('#fechafin').datetimepicker({
@@ -135,7 +136,7 @@
                 },
                 format: 'DD/MM/YYYY HH:mm',
                 defaultDate: new Date(),
-                maxDate: new Date()
+               // maxDate: new Date()
             });
 
             //** METODOS DEL GRID **////
@@ -193,7 +194,7 @@
 
                             if (result.result == true) {
 
-                                
+
                                 mensaje('success', 'Registros Eliminados', 'Los registros se eliminaron correctamente, espere un momento se estan actualizando los registros');
 
                                 del = $('#fechainicio').val();
@@ -346,3 +347,5 @@
         }
 
     </script>
+
+</div>
