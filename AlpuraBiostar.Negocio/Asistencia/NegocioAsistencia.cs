@@ -1,5 +1,6 @@
 ﻿using AlpuraBiostar.Datos.Asistencia;
 using AlpuraBiostar.Datos.Types;
+using AlpuraBiostar.Datos.Utilidades;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -23,12 +24,12 @@ namespace AlpuraBiostar.Negocio.Asistencia
             _conexionWSAlpura = conexionWSAlpura;
         }
 
-        public async Task<bool> syncRegistros()
+        public bool syncRegistros()
         {
             try
             {
                 var listRegistros = _repositorioAsistencia.obtenerRegistrosNoSync();
-                var result = await syncRegistroOracle(listRegistros);
+                var result = syncRegistroOracle(listRegistros);
                 return result;
             }
             catch (Exception)
@@ -44,28 +45,38 @@ namespace AlpuraBiostar.Negocio.Asistencia
         }
 
 
-        public async Task<bool> syncRegistroOracle(List<TypeAsistencia> lstasistencias)
+        public bool syncRegistroOracle(List<TypeAsistencia> lstasistencias)
         {
+            
             try
             {
-                var httpClient = new HttpClient()
-                {
-                    Timeout = new TimeSpan(0, 1, 0),
-                    BaseAddress = new Uri(_conexionWSAlpura)
-                };
 
                 foreach (var registro in lstasistencias)
                 {
+
+                    registro.Fecha = new Validaciones().validarFecha(registro.Fecha);
+                    registro.Records = new Validaciones().validarFecha(registro.Records);
+
                     var registroAEnviar = crearRegistro(registro);
 
                     var json = JsonConvert.SerializeObject(registroAEnviar);
                     StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
-                    var result = httpClient.PostAsync("biostar_sirhal/", payload);
-                    var content = await result.Result.Content.ReadAsStringAsync();
-                    var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(content);
 
-                    registrarEstadoDeAsistencia(registro, resultadoOracle);
+                    using (var client = new HttpClient())
+                    {
+                        client.Timeout = new TimeSpan(0, 1, 0);
+                        client.BaseAddress = new Uri(_conexionWSAlpura);
+                        var response = client.PostAsync("biostar_sirhal/", payload).Result;
 
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var responseContent = response.Content;
+                            string responseString = responseContent.ReadAsStringAsync().Result;
+                            var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
+
+                            registrarEstadoDeAsistencia(registro, resultadoOracle);
+                        }
+                    }
                 }
                 return true;
             }

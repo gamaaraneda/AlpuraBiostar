@@ -10,9 +10,11 @@ namespace AlpuraBiostar.Negocio.Asistencia
 {
     public interface INegocioAsistencia
     {
-        Task<bool> syncRegistros();
+        bool  syncRegistros();
+
         List<TypeAsistencia> obtenerRegistrosPorRangoDeFechas(string fechaInicio, string fechaFin);
-        Task<bool> syncRegistroOracle(List<TypeAsistencia> lstasistencias);
+
+        bool syncRegistroOracle(List<TypeAsistencia> lstasistencias);
 
         void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle);
     }

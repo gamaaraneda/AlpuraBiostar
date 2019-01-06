@@ -195,7 +195,7 @@
                             if (result.result == true) {
 
 
-                                mensaje('success', 'Registros Eliminados', 'Los registros se eliminaron correctamente, espere un momento se estan actualizando los registros');
+                                mensaje('success', 'Registros Sync', 'Los registros se sincronizaron correctamente, espere un momento se estan actualizando los registros');
 
                                 del = $('#fechainicio').val();
                                 al = $('#fechafin').val();
@@ -204,7 +204,7 @@
                             }
                             if (result.result == false) {
                                 ocultarCargando();
-                                mensaje('error', 'Registros No Eliminados', 'Los registros no fueron eliminados, reintente  y si persiste el problema consulte al administrador del sistema');
+                                mensaje('error', 'Registros No Sync', 'Los registros no fueron sincronizados, reintente  y si persiste el problema consulte al administrador del sistema');
                             }
                         },
                         complete: function () {
