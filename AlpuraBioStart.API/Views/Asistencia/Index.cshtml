@@ -249,6 +249,8 @@
 
 
         function ConsultarRegistros(fechaInio, fechaFin) {
+            document.getElementById("cargando").style.display = 'inline';
+            document.getElementById("divResultados").style.display = 'none';
 
             $.ajax({
                     url: '@Url.Action("RegistrosFiltroFechas", "Asistencia")',
@@ -257,6 +259,9 @@
                  data: JSON.stringify({ FechaInicio: fechaInio, FechaFin: fechaFin }),
                     dataType: "json",
                     success: function (response) {
+
+                        document.getElementById("cargando").style.display = 'none';
+                        document.getElementById("divResultados").style.display = 'inline';
 
                         table = $('#gridAsistencia').DataTable({
                             destroy: true,
@@ -308,7 +313,9 @@
                             ]
                         });
                     },
-                    complete: function () {
+                complete: function () {
+                    document.getElementById("cargando").style.display = 'none';
+                    document.getElementById("divResultados").style.display = 'inline';
                     },
                 });
 
