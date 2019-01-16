@@ -57,12 +57,7 @@ namespace AlpuraBioStart.API.Controllers
             FechaInicio = new Validaciones().validarFecha(FechaInicio);
             FechaFin = new Validaciones().validarFecha(FechaFin);
 
-           //var aa = new List<TypeAsistencia>();
-            //aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = ""121612"", 
-            //Fecha = "04/01/2019 02:11:37 p. m.", Ubicacion = "2 547733118 (172.108.7.30)",
-            //Hostname = "BioStation", 
-            //RegSoa = "NO", Status = "",
-            //Records = "04/01/2019 02:11:37 p. m." });
+            //var aa = new List<TypeAsistencia>();
             //aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = "676", Fecha = "16/12/2018", Ubicacion = "mexico", Hostname = "GSA", RegSoa = "SI", Status = "", Records = "16/12/2018" });
 
             var lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
@@ -73,7 +68,7 @@ namespace AlpuraBioStart.API.Controllers
                 _negocioAsistencia.syncRegistroOracle(registrosNoSync);
             }
 
-             lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
+            lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
 
             return Json(new { result = lstAsistencia }, JsonRequestBehavior.AllowGet);
         }

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -32,7 +33,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
                 var result = syncRegistroOracle(listRegistros);
                 return result;
             }
-            catch (Exception)
+            catch (Exception EX)
             {
 
                 return false;
@@ -50,10 +51,12 @@ namespace AlpuraBiostar.Negocio.Asistencia
             
             try
             {
+                int contador = 1;
+                int total = lstasistencias.Count;
 
+                Log("Iniciando el envio de "+ total.ToString());
                 foreach (var registro in lstasistencias)
                 {
-
                     registro.Fecha = new Validaciones().validarFecha(registro.Fecha);
                     registro.Records = new Validaciones().validarFecha(registro.Records);
 
@@ -62,21 +65,43 @@ namespace AlpuraBiostar.Negocio.Asistencia
                     var json = JsonConvert.SerializeObject(registroAEnviar);
                     StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
 
+                    Log("registro  "+contador.ToString()+" / "+ total +" -> "+json);
+
                     using (var client = new HttpClient())
                     {
                         client.Timeout = new TimeSpan(0, 1, 0);
                         client.BaseAddress = new Uri(_conexionWSAlpura);
+
+                        Log("registro  " + contador.ToString() + " / " + total +" -> Iniciando Conexion con ws");
+
                         var response = client.PostAsync("biostar_sirhal/", payload).Result;
 
                         if (response.IsSuccessStatusCode)
                         {
+                            Log("registro  " + contador.ToString() + " / " + total +" -> Se obtuvo respuesta de WS");
+                            try
+                            {
+
+                           
                             var responseContent = response.Content;
                             string responseString = responseContent.ReadAsStringAsync().Result;
+
+                            Log("registro  " + contador.ToString() + " / " + total  + " -> Se obtuvo respuesta de WS -> "+ responseString);
+
                             var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
 
+                            Log("registro  " + contador.ToString() + " / " + total +  json + "-> Se desarializo correctamente");
+
                             registrarEstadoDeAsistencia(registro, resultadoOracle);
+                            }
+                            catch (Exception)
+                            {
+
+                                
+                            }
                         }
                     }
+                    contador++;
                 }
                 return true;
             }
@@ -102,11 +127,54 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
         public void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle)
         {
+
+           
             asistencia.RegSoa = resultOracle.o_estatus.Equals("OK") ? "SI" : "NO";
+
+            Log("registrando estatus de asistencia "+ resultOracle.o_estatus);
 
             _repositorioAsistencia.registrarEstadoDeAsistencia(asistencia, resultOracle);
 
+            Log("Se inserto correctamente " + resultOracle.o_estatus);
         }
 
+        public void Log(string mensaje)
+        {
+            try
+            {
+        //        string ruta = Path.Combine(
+        //Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+        //"Log.txt");
+
+                //string ruta = Directory.GetCurrentDirectory();
+                string ruta ="C:\\inetpub\\wwwroot\\biostar\\Log.txt";
+
+                if (!File.Exists(ruta))
+                {
+                    // Create a file to write to.
+                    using (StreamWriter sw = File.CreateText(ruta))
+                    {
+                        sw.WriteLine(mensaje + DateTime.Now.ToString());
+
+                    }
+                }
+
+                using (StreamWriter file = new StreamWriter(ruta, true))
+                {
+                    file.WriteLine(mensaje); //se agrega información al documento
+                    file.Close();
+                }
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
+      
     }
 }
