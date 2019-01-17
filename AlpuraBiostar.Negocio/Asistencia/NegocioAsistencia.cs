@@ -2,6 +2,7 @@
 using AlpuraBiostar.Datos.Types;
 using AlpuraBiostar.Datos.Utilidades;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,7 +17,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
     public class NegocioAsistencia : INegocioAsistencia
     {
         IRepositorioAsistencia _repositorioAsistencia;
-        private string _conexionWSAlpura;
+        private static string _conexionWSAlpura;
 
         public NegocioAsistencia(string conexionMariaDB, string conexionWSAlpura)
         {
@@ -48,13 +49,13 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
         public bool syncRegistroOracle(List<TypeAsistencia> lstasistencias)
         {
-            
+
             try
             {
                 int contador = 1;
                 int total = lstasistencias.Count;
 
-                Log("Iniciando el envio de "+ total.ToString());
+                Log("\n\n Iniciando el envio de " + total.ToString());
                 foreach (var registro in lstasistencias)
                 {
                     registro.Fecha = new Validaciones().validarFecha(registro.Fecha);
@@ -63,44 +64,9 @@ namespace AlpuraBiostar.Negocio.Asistencia
                     var registroAEnviar = crearRegistro(registro);
 
                     var json = JsonConvert.SerializeObject(registroAEnviar);
-                    StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    Log("registro  "+contador.ToString()+" / "+ total +" -> "+json);
+                    var a = GetJsonAsync(contador, total, json, registro).Result;
 
-                    using (var client = new HttpClient())
-                    {
-                        client.Timeout = new TimeSpan(0, 1, 0);
-                        client.BaseAddress = new Uri(_conexionWSAlpura);
-
-                        Log("registro  " + contador.ToString() + " / " + total +" -> Iniciando Conexion con ws");
-
-                        var response = client.PostAsync("biostar_sirhal/", payload).Result;
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            Log("registro  " + contador.ToString() + " / " + total +" -> Se obtuvo respuesta de WS");
-                            try
-                            {
-
-                           
-                            var responseContent = response.Content;
-                            string responseString = responseContent.ReadAsStringAsync().Result;
-
-                            Log("registro  " + contador.ToString() + " / " + total  + " -> Se obtuvo respuesta de WS -> "+ responseString);
-
-                            var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
-
-                            Log("registro  " + contador.ToString() + " / " + total +  json + "-> Se desarializo correctamente");
-
-                            registrarEstadoDeAsistencia(registro, resultadoOracle);
-                            }
-                            catch (Exception)
-                            {
-
-                                
-                            }
-                        }
-                    }
                     contador++;
                 }
                 return true;
@@ -110,6 +76,59 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
                 return false;
             }
+        }
+
+        public Task<TypeResultOracle> GetJsonAsync(int contador, int total, string json, TypeAsistencia registro)
+        {
+            StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
+            TypeResultOracle r = new TypeResultOracle();
+
+            using (var client = new HttpClient())
+            {
+                client.Timeout = new TimeSpan(0, 1, 0);
+                client.BaseAddress = new Uri(_conexionWSAlpura);
+
+                Log("registro  " + contador.ToString() + " / " + total + " -> " + json);
+
+                var response = client.PostAsync("biostar_sirhal/", payload).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    //Log("registro  " + contador.ToString() + " / " + total + " -> Se obtuvo respuesta de WS");
+
+                    try
+                    {
+                        var responseContent = response.Content;
+                        string responseString = responseContent.ReadAsStringAsync().Result;
+
+                        var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
+
+                        r = resultadoOracle;
+                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " +  responseString );
+
+                        registrarEstadoDeAsistencia(registro, resultadoOracle);
+                    }
+                    catch (Exception)
+                    {
+                        var responseContent = response.Content;
+                        string responseString = responseContent.ReadAsStringAsync().Result;
+                        // Log("registro  " + contador.ToString() + " / " + total + json + "-> Se desarializo segunda forma");
+                        var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracleVariable>(responseString);
+                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo segunda forma correcta -> " +responseString);
+
+                        var res = new TypeResultOracle() { o_estatus = resultadoOracle.o_estatus.nil, o_descripcion = resultadoOracle.o_descripcion.nil };
+                        registrarEstadoDeAsistencia(registro, res);
+                    }
+                }
+                else
+                {
+                    Log("registro  " + contador.ToString() + " / " + total + " -> NO Se obtuvo respuesta de WS !!!! :(");
+                }
+
+
+            }
+            //return r
+            return Task.FromResult(r);
         }
 
         private TypeRegistro crearRegistro(TypeAsistencia asistencia)
@@ -127,27 +146,18 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
         public void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle)
         {
-
-           
             asistencia.RegSoa = resultOracle.o_estatus.Equals("OK") ? "SI" : "NO";
-
-            Log("registrando estatus de asistencia "+ resultOracle.o_estatus);
-
+            //Log("registrando estatus de asistencia " + resultOracle.o_estatus);
             _repositorioAsistencia.registrarEstadoDeAsistencia(asistencia, resultOracle);
-
             Log("Se inserto correctamente " + resultOracle.o_estatus);
         }
 
-        public void Log(string mensaje)
+        public static void Log(string mensaje)
         {
             try
             {
-        //        string ruta = Path.Combine(
-        //Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-        //"Log.txt");
-
-                //string ruta = Directory.GetCurrentDirectory();
-                string ruta ="C:\\inetpub\\wwwroot\\biostar\\Log.txt";
+                //string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),"Log.txt");
+                 string ruta = "C:\\inetpub\\wwwroot\\biostar\\Log.txt";
 
                 if (!File.Exists(ruta))
                 {
@@ -155,7 +165,6 @@ namespace AlpuraBiostar.Negocio.Asistencia
                     using (StreamWriter sw = File.CreateText(ruta))
                     {
                         sw.WriteLine(mensaje + DateTime.Now.ToString());
-
                     }
                 }
 
@@ -165,16 +174,15 @@ namespace AlpuraBiostar.Negocio.Asistencia
                     file.Close();
                 }
 
-
             }
             catch (Exception)
             {
 
-                throw;
+                
             }
 
         }
 
-      
+
     }
 }

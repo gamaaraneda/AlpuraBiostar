@@ -16,6 +16,6 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
         bool syncRegistroOracle(List<TypeAsistencia> lstasistencias);
 
-        void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle);
+        //static void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle);
     }
 }
