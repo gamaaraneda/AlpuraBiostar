@@ -59,7 +59,9 @@ namespace AlpuraBiostar.ProcesoSync_Test
 
         public static void syncRegistros(string conexionMariaDB, string conexionWSAlpura)
         {
-            var FechaInicio = DateTime.Now.AddMinutes(-5).ToString();
+            var minutosSyncRango = Convert.ToInt32(ConfigurationManager.AppSettings["minutosSyncRango"].ToString());
+
+            var FechaInicio = DateTime.Now.AddMinutes(minutosSyncRango).ToString();
             var FechaFin = DateTime.Now.ToString();
 
             FechaInicio = new Validaciones().validarFecha(FechaInicio);
