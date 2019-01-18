@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.Negocio", "Al
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.NegocioTests", "AlpuraBiostar.NegocioTests\AlpuraBiostar.NegocioTests.csproj", "{64063E54-90BA-4663-AFBE-B717794CBDFD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProcesoSync", "ProcesoSync", "{89A25E95-D962-4905-8D18-FE019017F81A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.ProcesoSync_Test", "AlpuraBiostar.ProcesoSync_Test\AlpuraBiostar.ProcesoSync_Test.csproj", "{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,9 +37,16 @@ Global
 		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64063E54-90BA-4663-AFBE-B717794CBDFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A} = {89A25E95-D962-4905-8D18-FE019017F81A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A792BBD5-A38F-4F41-8568-9367DD7BDF44}

@@ -14,7 +14,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
         List<TypeAsistencia> obtenerRegistrosPorRangoDeFechas(string fechaInicio, string fechaFin);
 
-        bool syncRegistroOracle(List<TypeAsistencia> lstasistencias);
+        bool syncRegistroOracle(List<TypeAsistencia> lstasistencias,bool logConsole=false);
 
         //static void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle);
     }

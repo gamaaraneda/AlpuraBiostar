@@ -47,7 +47,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
         }
 
 
-        public bool syncRegistroOracle(List<TypeAsistencia> lstasistencias)
+        public bool syncRegistroOracle(List<TypeAsistencia> lstasistencias, bool logConsole = false)
         {
 
             try
@@ -55,7 +55,9 @@ namespace AlpuraBiostar.Negocio.Asistencia
                 int contador = 1;
                 int total = lstasistencias.Count;
 
-                Log("\n\n Iniciando el envio de " + total.ToString());
+
+                Log("Iniciando el envio de " + total.ToString(), logConsole);
+
                 foreach (var registro in lstasistencias)
                 {
                     registro.Fecha = new Validaciones().validarFecha(registro.Fecha);
@@ -65,7 +67,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
                     var json = JsonConvert.SerializeObject(registroAEnviar);
 
-                    var a = GetJsonAsync(contador, total, json, registro).Result;
+                    var a = GetJsonAsync(contador, total, json, registro, logConsole).Result;
 
                     contador++;
                 }
@@ -78,7 +80,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
             }
         }
 
-        public Task<TypeResultOracle> GetJsonAsync(int contador, int total, string json, TypeAsistencia registro)
+        public Task<TypeResultOracle> GetJsonAsync(int contador, int total, string json, TypeAsistencia registro, bool logConsole = false)
         {
             StringContent payload = new StringContent(json, Encoding.UTF8, "application/json");
             TypeResultOracle r = new TypeResultOracle();
@@ -88,8 +90,8 @@ namespace AlpuraBiostar.Negocio.Asistencia
                 client.Timeout = new TimeSpan(0, 1, 0);
                 client.BaseAddress = new Uri(_conexionWSAlpura);
 
-                Log("registro  " + contador.ToString() + " / " + total + " -> " + json);
-
+                Log("registro  " + contador.ToString() + " / " + total + " -> " + json, logConsole);
+              
                 var response = client.PostAsync("biostar_sirhal/", payload).Result;
 
                 if (response.IsSuccessStatusCode)
@@ -104,7 +106,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
                         var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
 
                         r = resultadoOracle;
-                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " +  responseString );
+                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " + responseString,logConsole);
 
                         registrarEstadoDeAsistencia(registro, resultadoOracle);
                     }
@@ -114,15 +116,15 @@ namespace AlpuraBiostar.Negocio.Asistencia
                         string responseString = responseContent.ReadAsStringAsync().Result;
                         // Log("registro  " + contador.ToString() + " / " + total + json + "-> Se desarializo segunda forma");
                         var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracleVariable>(responseString);
-                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo segunda forma correcta -> " +responseString);
+                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo segunda forma correcta -> " + responseString, logConsole);
 
                         var res = new TypeResultOracle() { o_estatus = resultadoOracle.o_estatus.nil, o_descripcion = resultadoOracle.o_descripcion.nil };
-                        registrarEstadoDeAsistencia(registro, res);
+                        registrarEstadoDeAsistencia(registro, res, logConsole);
                     }
                 }
                 else
                 {
-                    Log("registro  " + contador.ToString() + " / " + total + " -> NO Se obtuvo respuesta de WS !!!! :(");
+                    Log("registro  " + contador.ToString() + " / " + total + " -> NO Se obtuvo respuesta de WS !!!! :(", logConsole);
                 }
 
 
@@ -144,41 +146,48 @@ namespace AlpuraBiostar.Negocio.Asistencia
             return registro;
         }
 
-        public void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle)
+        public void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle, bool logConsole = false)
         {
             asistencia.RegSoa = resultOracle.o_estatus.Equals("OK") ? "SI" : "NO";
             //Log("registrando estatus de asistencia " + resultOracle.o_estatus);
             _repositorioAsistencia.registrarEstadoDeAsistencia(asistencia, resultOracle);
-            Log("Se inserto correctamente " + resultOracle.o_estatus);
+            Log("Se inserto correctamente " ,logConsole);
         }
 
-        public static void Log(string mensaje)
+        public static void Log(string mensaje, bool logConsole = false)
         {
             try
             {
-                //string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),"Log.txt");
-                 string ruta = "C:\\inetpub\\wwwroot\\biostar\\Log.txt";
-
-                if (!File.Exists(ruta))
+                if (!logConsole)
                 {
-                    // Create a file to write to.
-                    using (StreamWriter sw = File.CreateText(ruta))
+                    //string ruta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),"Log.txt");
+                    string ruta = "C:\\inetpub\\wwwroot\\biostar\\Log.txt";
+
+                    if (!File.Exists(ruta))
                     {
-                        sw.WriteLine(mensaje + DateTime.Now.ToString());
+                        // Create a file to write to.
+                        using (StreamWriter sw = File.CreateText(ruta))
+                        {
+                            sw.WriteLine(mensaje + DateTime.Now.ToString());
+                        }
+                    }
+
+                    using (StreamWriter file = new StreamWriter(ruta, true))
+                    {
+                        file.WriteLine(mensaje); //se agrega información al documento
+                        file.Close();
                     }
                 }
+                else {
 
-                using (StreamWriter file = new StreamWriter(ruta, true))
-                {
-                    file.WriteLine(mensaje); //se agrega información al documento
-                    file.Close();
+                    Console.WriteLine(DateTime.Now.ToString() + " -> "+mensaje);
                 }
 
             }
             catch (Exception)
             {
 
-                
+
             }
 
         }
