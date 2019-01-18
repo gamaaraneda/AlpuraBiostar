@@ -4,42 +4,20 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AlpuraBiostar.ProcesoSync_Test
+namespace AlpuraBiostar.ProcesoSync_Rango
 {
     class Program
     {
-        private const int MF_BYCOMMAND = 0x00000000;
-        public const int SC_CLOSE = 0xF060;
-
-        [DllImport("user32.dll")]
-        public static extern int DeleteMenu(IntPtr hMenu, int nPosition, int wFlags);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
-
-        [DllImport("kernel32.dll", ExactSpelling = true)]
-        private static extern IntPtr GetConsoleWindow();
-
         static void Main(string[] args)
         {
-            DeleteMenu(GetSystemMenu(GetConsoleWindow(), false), SC_CLOSE, MF_BYCOMMAND);
-
-            Console.WriteLine("Inicio de Sync");
-
-            Timer _timerProcesoSync = new System.Threading.Timer(
-                         e => ejecutarProcesoSync(),
-                                null,
-                                TimeSpan.Zero,
-                                TimeSpan.FromMinutes(1));
-
-            while (true)
-            { }
-
+            
+           
+            ejecutarProcesoSync();
+            Console.ReadLine();
         }
 
         public static void ejecutarProcesoSync()
@@ -49,9 +27,6 @@ namespace AlpuraBiostar.ProcesoSync_Test
             string conexionMariaDB = ConfigurationManager.AppSettings["conexionMariaDB"].ToString();
             string conexionWSAlpura = ConfigurationManager.AppSettings["conexionWSAlpura"].ToString();
 
-            //string conexionMariaDB = "datasource=172.108.17.3;port=3312;username=alpura;password=Alpura#2018;database=biostar_tna;";
-            //string conexionWSAlpura = "http://soa.alpura.com:17005/ALP_RH_CHECADORES_SB/BiostarSirhalRS/";
-
             syncRegistros(conexionMariaDB, conexionWSAlpura);
 
             Console.WriteLine(DateTime.Now.ToString() + " -> Fin de la Sincronizacion");
@@ -59,8 +34,9 @@ namespace AlpuraBiostar.ProcesoSync_Test
 
         public static void syncRegistros(string conexionMariaDB, string conexionWSAlpura)
         {
-            var FechaInicio = DateTime.Now.AddMinutes(-5).ToString();
-            var FechaFin = DateTime.Now.ToString();
+            
+            var FechaInicio = ConfigurationManager.AppSettings["FechaInicial"];
+            var FechaFin = ConfigurationManager.AppSettings["FechaIFinal"];
 
             FechaInicio = new Validaciones().validarFecha(FechaInicio);
             FechaFin = new Validaciones().validarFecha(FechaFin);
@@ -76,15 +52,13 @@ namespace AlpuraBiostar.ProcesoSync_Test
 
             if (registrosNoSync.Count > 0)
             {
-               // Console.WriteLine(DateTime.Now.ToString() + " -> Syncronizando "+registrosNoSync.Count.ToString()+" registros");
+                // Console.WriteLine(DateTime.Now.ToString() + " -> Syncronizando "+registrosNoSync.Count.ToString()+" registros");
 
-                _negocioAsistencia.syncRegistroOracle(registrosNoSync,true);
+                _negocioAsistencia.syncRegistroOracle(registrosNoSync, true);
             }
 
 
         }
-
-
 
 
     }

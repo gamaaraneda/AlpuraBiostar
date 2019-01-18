@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A}</ProjectGuid>
+    <ProjectGuid>{0799E39C-A8CF-4A3B-861C-6B8F09229DA8}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AlpuraBiostar.ProcesoSync_Test</RootNamespace>
-    <AssemblyName>AlpuraBiostar.ProcesoSync_Test</AssemblyName>
+    <RootNamespace>AlpuraBiostar.ProcesoSync_Rango</RootNamespace>
+    <AssemblyName>AlpuraBiostar.ProcesoSync_Rango</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
