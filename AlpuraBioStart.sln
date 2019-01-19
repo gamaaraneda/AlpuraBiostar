@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.ProcesoSync_T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.ProcesoSync_Rango", "AlpuraBiostar.ProcesoSync_Rango\AlpuraBiostar.ProcesoSync_Rango.csproj", "{0799E39C-A8CF-4A3B-861C-6B8F09229DA8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlpuraBiostar.ProcesoSync_Periodo", "AlpuraBiostar.ProcesoSync_Periodo\AlpuraBiostar.ProcesoSync_Periodo.csproj", "{EEFBBDC9-638F-4730-954B-6E5FD3DCA061}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,6 +49,10 @@ Global
 		{0799E39C-A8CF-4A3B-861C-6B8F09229DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0799E39C-A8CF-4A3B-861C-6B8F09229DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0799E39C-A8CF-4A3B-861C-6B8F09229DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEFBBDC9-638F-4730-954B-6E5FD3DCA061}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEFBBDC9-638F-4730-954B-6E5FD3DCA061}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEFBBDC9-638F-4730-954B-6E5FD3DCA061}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEFBBDC9-638F-4730-954B-6E5FD3DCA061}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,6 +60,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DA6D2AB8-97FA-42CE-8853-E66D380FFE5A} = {89A25E95-D962-4905-8D18-FE019017F81A}
 		{0799E39C-A8CF-4A3B-861C-6B8F09229DA8} = {89A25E95-D962-4905-8D18-FE019017F81A}
+		{EEFBBDC9-638F-4730-954B-6E5FD3DCA061} = {89A25E95-D962-4905-8D18-FE019017F81A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A792BBD5-A38F-4F41-8568-9367DD7BDF44}
