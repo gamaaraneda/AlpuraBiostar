@@ -91,7 +91,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
                 client.BaseAddress = new Uri(_conexionWSAlpura);
 
                 Log("registro  " + contador.ToString() + " / " + total + " -> " + json, logConsole);
-              
+
                 var response = client.PostAsync("biostar_sirhal/", payload).Result;
 
                 if (response.IsSuccessStatusCode)
@@ -106,7 +106,7 @@ namespace AlpuraBiostar.Negocio.Asistencia
                         var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
 
                         r = resultadoOracle;
-                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " + responseString,logConsole);
+                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " + responseString, logConsole);
 
                         registrarEstadoDeAsistencia(registro, resultadoOracle);
                     }
@@ -148,10 +148,22 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
         public void registrarEstadoDeAsistencia(TypeAsistencia asistencia, TypeResultOracle resultOracle, bool logConsole = false)
         {
-            asistencia.RegSoa = resultOracle.o_estatus.Equals("OK") ? "SI" : "NO";
+            if (resultOracle.o_estatus.Equals("OK"))
+            {
+                asistencia.RegSoa = "SI";
+            }
+            else if (resultOracle.o_estatus.Equals("true"))
+            {
+                asistencia.RegSoa = "SI";
+            }
+            else
+            {
+                asistencia.RegSoa = "NO";
+            }
+            //asistencia.RegSoa = resultOracle.o_estatus.Equals("OK") ? "SI" : "NO";
             //Log("registrando estatus de asistencia " + resultOracle.o_estatus);
             _repositorioAsistencia.registrarEstadoDeAsistencia(asistencia, resultOracle);
-            Log("Se inserto correctamente " ,logConsole);
+            Log("Se inserto correctamente ", logConsole);
         }
 
         public static void Log(string mensaje, bool logConsole = false)
@@ -178,9 +190,10 @@ namespace AlpuraBiostar.Negocio.Asistencia
                         file.Close();
                     }
                 }
-                else {
+                else
+                {
 
-                    Console.WriteLine(DateTime.Now.ToString() + " -> "+mensaje);
+                    Console.WriteLine(DateTime.Now.ToString() + " -> " + mensaje);
                 }
 
             }
