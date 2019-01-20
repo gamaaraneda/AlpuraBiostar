@@ -61,14 +61,14 @@ namespace AlpuraBioStart.API.Controllers
             //aa.Add(new TypeAsistencia() { Descripcion = "", EmployeNumber = "676", Fecha = "16/12/2018", Ubicacion = "mexico", Hostname = "GSA", RegSoa = "SI", Status = "", Records = "16/12/2018" });
 
             var lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
-            var registrosNoSync = lstAsistencia.Where(r => r.RegSoa.Equals("NO")).ToList();
+            //var registrosNoSync = lstAsistencia.Where(r => r.RegSoa.Equals("NO")).ToList();
 
-            if (registrosNoSync.Count > 0)
-            {
-                _negocioAsistencia.syncRegistroOracle(registrosNoSync);
-            }
+            //if (registrosNoSync.Count > 0)
+            //{
+            //    _negocioAsistencia.syncRegistroOracle(registrosNoSync);
+            //}
 
-            lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
+            //lstAsistencia = _negocioAsistencia.obtenerRegistrosPorRangoDeFechas(FechaInicio, FechaFin);
 
             return Json(new { result = lstAsistencia }, JsonRequestBehavior.AllowGet);
         }
