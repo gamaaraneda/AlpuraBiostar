@@ -31,11 +31,13 @@ namespace AlpuraBiostar.ProcesoSync_Test
 
             Console.WriteLine("Inicio de Sync");
 
+            var tiemposync =ConfigurationManager.AppSettings["minutosSyncRango"].ToString();
+
             Timer _timerProcesoSync = new System.Threading.Timer(
                          e => ejecutarProcesoSync(),
                                 null,
                                 TimeSpan.Zero,
-                                TimeSpan.FromMinutes(1));
+                                TimeSpan.FromMinutes(Convert.ToInt32(tiemposync)));
 
             while (true)
             { }
