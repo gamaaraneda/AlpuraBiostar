@@ -32,7 +32,7 @@ namespace AlpuraBiostar.Datos.Asistencia
                 { "@fechaInicio", fechaInicio },
                 { "@fechaFin", fechaFin}
             };
-            var dtAsistencia = _consultasMariaDB.ejecutarStore("Asistencia_obtenerRegistrosPorRangoDeFechas", dicParametros);
+            var dtAsistencia = _consultasMariaDB.ejecutarStore("Desktop_Asistencia_obtenerRegistrosPorRangoDeFechas", dicParametros);
             var lstAsistencia = obtenerDatosAsistencias(dtAsistencia);
 
             return lstAsistencia;

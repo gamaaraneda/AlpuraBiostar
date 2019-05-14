@@ -124,7 +124,10 @@ namespace AlpuraBiostar.Negocio.Asistencia
                 }
                 else
                 {
+                    var res = new TypeResultOracle() { o_estatus = "NO", o_descripcion = "No hay Conexion con el WS" };
+
                     Log("registro  " + contador.ToString() + " / " + total + " -> NO Se obtuvo respuesta de WS !!!! :(", logConsole);
+                    registrarEstadoDeAsistencia(registro, res, logConsole);
                 }
 
 

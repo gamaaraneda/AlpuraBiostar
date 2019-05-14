@@ -46,7 +46,16 @@ namespace AlpuraBiostar.ProcesoSync_Test
 
         public static void ejecutarProcesoSync()
         {
-            Console.WriteLine(DateTime.Now.ToString() + " -> Inicio de la Sincronizacion");
+            try
+            {
+                Console.WriteLine(DateTime.Now.ToString() + " -> Inicio de la Sincronizacion");
+            }
+            catch (Exception)
+            {
+
+                Console.WriteLine(" -> Inicio de la Sincronizacion"); 
+            }
+            
 
             string conexionMariaDB = ConfigurationManager.AppSettings["conexionMariaDB"].ToString();
             string conexionWSAlpura = ConfigurationManager.AppSettings["conexionWSAlpura"].ToString();
