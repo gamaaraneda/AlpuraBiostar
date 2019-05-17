@@ -102,9 +102,7 @@ namespace AlpuraBiostar.ProcesoSync_Test
 
             if (registrosNoSync.Count > 0)
             {
-                // Console.WriteLine(DateTime.Now.ToString() + " -> Syncronizando "+registrosNoSync.Count.ToString()+" registros");
-
-                _negocioAsistencia.syncRegistroOracle(registrosNoSync, true);
+               _negocioAsistencia.syncRegistroOracle(registrosNoSync, true);
             }
 
 
