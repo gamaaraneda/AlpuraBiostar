@@ -34,7 +34,7 @@ namespace AlpuraBiostar.Datos.Utilidades
                 MySqlCommand commandDatabase = new MySqlCommand(nombreStore, databaseConnection);
                 // Asignamos el tipo de consulta que sera
                 commandDatabase.CommandType = CommandType.StoredProcedure;
-                commandDatabase.CommandTimeout = 60;
+                commandDatabase.CommandTimeout = 240;
                 MySqlDataReader reader;
 
                 //// Mandamos los parametros al store

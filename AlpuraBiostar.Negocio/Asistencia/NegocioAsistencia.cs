@@ -87,43 +87,54 @@ namespace AlpuraBiostar.Negocio.Asistencia
 
             using (var client = new HttpClient())
             {
-                client.Timeout = new TimeSpan(0, 1, 0);
+                client.Timeout = new TimeSpan(0, 0, 10);
                 client.BaseAddress = new Uri(_conexionWSAlpura);
 
                 Log("registro  " + contador.ToString() + " / " + total + " -> " + json, logConsole);
 
-                var response = client.PostAsync("biostar_sirhal/", payload).Result;
-
-                if (response.IsSuccessStatusCode)
+                try
                 {
-                    //Log("registro  " + contador.ToString() + " / " + total + " -> Se obtuvo respuesta de WS");
+                    var response = client.PostAsync("biostar_sirhal/", payload).Result;
 
-                    try
+                    if (response.IsSuccessStatusCode)
                     {
-                        var responseContent = response.Content;
-                        string responseString = responseContent.ReadAsStringAsync().Result;
+                        //Log("registro  " + contador.ToString() + " / " + total + " -> Se obtuvo respuesta de WS");
 
-                        var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
+                        try
+                        {
+                            var responseContent = response.Content;
+                            string responseString = responseContent.ReadAsStringAsync().Result;
 
-                        r = resultadoOracle;
-                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " + responseString, logConsole);
+                            var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracle>(responseString);
 
-                        registrarEstadoDeAsistencia(registro, resultadoOracle);
+                            r = resultadoOracle;
+                            Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo correctamente -> " + responseString, logConsole);
+
+                            registrarEstadoDeAsistencia(registro, resultadoOracle);
+                        }
+                        catch (Exception)
+                        {
+                            var responseContent = response.Content;
+                            string responseString = responseContent.ReadAsStringAsync().Result;
+                            // Log("registro  " + contador.ToString() + " / " + total + json + "-> Se desarializo segunda forma");
+                            var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracleVariable>(responseString);
+                            Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo segunda forma correcta -> " + responseString, logConsole);
+
+                            var res = new TypeResultOracle() { o_estatus = resultadoOracle.o_estatus.nil, o_descripcion = resultadoOracle.o_descripcion.nil };
+                            registrarEstadoDeAsistencia(registro, res, logConsole);
+                        }
                     }
-                    catch (Exception)
+                    else
                     {
-                        var responseContent = response.Content;
-                        string responseString = responseContent.ReadAsStringAsync().Result;
-                        // Log("registro  " + contador.ToString() + " / " + total + json + "-> Se desarializo segunda forma");
-                        var resultadoOracle = JsonConvert.DeserializeObject<TypeResultOracleVariable>(responseString);
-                        Log("registro  " + contador.ToString() + " / " + total + " -> Se desarializo segunda forma correcta -> " + responseString, logConsole);
+                        var res = new TypeResultOracle() { o_estatus = "NO", o_descripcion = "No hay Conexion con el WS" };
 
-                        var res = new TypeResultOracle() { o_estatus = resultadoOracle.o_estatus.nil, o_descripcion = resultadoOracle.o_descripcion.nil };
+                        Log("registro  " + contador.ToString() + " / " + total + " -> NO Se obtuvo respuesta de WS !!!! :(", logConsole);
                         registrarEstadoDeAsistencia(registro, res, logConsole);
                     }
                 }
-                else
+                catch (Exception)
                 {
+
                     var res = new TypeResultOracle() { o_estatus = "NO", o_descripcion = "No hay Conexion con el WS" };
 
                     Log("registro  " + contador.ToString() + " / " + total + " -> NO Se obtuvo respuesta de WS !!!! :(", logConsole);
